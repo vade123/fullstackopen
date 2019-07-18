@@ -3,11 +3,13 @@ import ReactDOM from 'react-dom'
 
 const Title = ({title}) => <h1>{title}</h1>
 const Button = ({handleClick, text}) => <button onClick = {handleClick}>{text}</button>
-const Counter = ({type, count}) => <div>{type} {count}</div>
+const Statistic = ({text, value}) => <div>{text} {value}</div>
 
 const Statistics = ({good, neutral, bad}) => {
     const total = good+neutral+bad
-    const average = good-bad
+    const average = (good-bad)/total
+    const positive = good/total * 100 + ' %'
+    
     if (total === 0) {
         return (
             <div>
@@ -17,12 +19,12 @@ const Statistics = ({good, neutral, bad}) => {
     }
     return (
         <div>
-            <Counter type='Good' count={good} />
-            <Counter type='Neutral' count={neutral} />
-            <Counter type='Bad' count={bad} />
-            <Counter type='All' count={total} />
-            <Counter type='Average' count={average/total} />
-            <div>Positive {good/total * 100} %</div>
+            <Statistic text='Good' value={good} />
+            <Statistic text='Neutral' value={neutral} />
+            <Statistic text='Bad' value={bad} />
+            <Statistic text='All' value={total} />
+            <Statistic text='Average' value={average} />
+            <Statistic text='Positive' value={positive} />
         </div>
     )
 }
