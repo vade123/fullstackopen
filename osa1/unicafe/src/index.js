@@ -8,9 +8,15 @@ const Counter = ({type, count}) => <div>{type} {count}</div>
 const Statistics = ({good, neutral, bad}) => {
     const total = good+neutral+bad
     const average = good-bad
+    if (total === 0) {
+        return (
+            <div>
+            No feedback given
+            </div>
+        )
+    }
     return (
         <div>
-            <Title title='Statistics' />
             <Counter type='Good' count={good} />
             <Counter type='Neutral' count={neutral} />
             <Counter type='Bad' count={bad} />
@@ -44,6 +50,7 @@ const App = () => {
             <Button handleClick={() => handleClick('good')} text='Good' />
             <Button handleClick={() => handleClick('neutral')} text='Neutral' />
             <Button handleClick={() => handleClick('bad')} text='Bad' />
+            <Title title='Statistics' />
             <Statistics good={good} neutral={neutral} bad={bad} />
         </div>
     )
