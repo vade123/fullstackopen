@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 
 const getRandomInt = (max) => {
         return Math.floor(Math.random() * Math.floor(max));
-    }
+}
 const Display = ({anecdote, votes}) => {
     return ( 
         <div>
