@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 
 const Header = ({course}) => {
     return (
-        <h1>{course}</h1>
+        <h2>{course}</h2>
     )
 }
 
@@ -41,34 +41,54 @@ const Course = ({course}) => {
 }
 
 const App = () => {
-    const course = {
-        name: 'Half Stack application development',
-        parts: [
-            {   
-                id: 1,
-                name: 'Fundamentals of React',
-                exercises: 10
-            },
-            {   
-                id: 2,
-                name: 'Using props to pass data',
-                exercises: 7
-            },
-            {   
-                id: 3,
-                name: 'State of a component',
-                exercises: 14
-            },
-            {   
-                id: 4,
-                name: 'Redux',
-                exercises: 11
-            }
-        ]
-    }
+    const courses = [ 
+        {
+            name: 'Half Stack application development',
+            parts: [
+                {   
+                    id: 1,
+                    name: 'Fundamentals of React',
+                    exercises: 10
+                },
+                {   
+                    id: 2,
+                    name: 'Using props to pass data',
+                    exercises: 7
+                },
+                {   
+                    id: 3,
+                    name: 'State of a component',
+                    exercises: 14
+                },
+                {   
+                    id: 4,
+                    name: 'Redux',
+                    exercises: 11
+                }
+            ]
+        },
+        {
+            name: 'Node.js',
+                parts: [
+                {
+                    name: 'Routing',
+                    exercises: 3,
+                    id: 1
+                },
+                {
+                    name: 'Middlewares',
+                    exercises: 7,
+                    id: 2
+                }
+            ]
+        }
+    ]
+
     return (
         <div>
-            <Course course={course} />
+            <h1>Webdev curriculum</h1>
+            <Course course={courses[0]} />
+            <Course course={courses[1]} />
         </div>
     )
 }
