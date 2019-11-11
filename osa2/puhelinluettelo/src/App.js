@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import personService from './services/persons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
@@ -39,6 +38,23 @@ const App = () => {
         setNewNumber('')
     }
     
+    const deletePerson = (id) => {
+        const person = persons.find(p => p.id === id)
+        if (window.confirm(`Delete ${person.name}?`)) {
+            personService
+                .deletePerson(id)
+                .then(() => {
+                    setPersons(persons.filter(p => p.id !== id))
+                })
+                .catch(error => {
+                    alert(
+                        `the person '${person.name}' was already deleted from the server`
+                    )
+                    setPersons(persons.filter(p => p.id !== id))
+                })
+        }
+    }
+
     const handleNameChange = (event) => {
         setNewName(event.target.value)
     }
@@ -50,7 +66,7 @@ const App = () => {
     const handleFilterChange = (event) => {
         setFilter(event.target.value) 
     }
-
+    
     return (
         <div>
         <h2>Phonebook</h2>
@@ -61,7 +77,7 @@ const App = () => {
             valueName={newName} onChangeName={handleNameChange}
             valueNumber={newNumber} onChangeNumber={handleNumberChange} />
         <h2>Numbers</h2>
-        <Persons filter={filter} persons={persons}/>
+        <Persons filter={filter} persons={persons} deletePerson={deletePerson}/>
         </div>
     )
 }

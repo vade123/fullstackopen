@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Persons = ({filter, persons}) => {
+const Persons = ({filter, persons, deletePerson}) => {
     const personsToShow = filter === "" 
         ? persons 
         : persons.filter(person => person.name.toLowerCase().includes(filter))
@@ -9,6 +9,8 @@ const Persons = ({filter, persons}) => {
         personsToShow.map(person =>
             <li key={person.name}>
                 {person.name} {person.number}
+                &emsp;
+                <button onClick={() => deletePerson(person.id)}>Delete contact</button>
             </li>
         )
     )
