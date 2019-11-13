@@ -10,7 +10,7 @@ const App = () => {
     const [ newName, setNewName ] = useState('')
     const [ newNumber, setNewNumber ] = useState('')
     const [ filter, setFilter ] = useState('')
-    const [ notification, setNotification ] = useState(null)
+    const [ notification, setNotification ] = useState([null, ''])
 
     useEffect(() => {
         personService
@@ -34,10 +34,18 @@ const App = () => {
                     .update(person.id, personObject)
                     .then(returnedPerson => {
                         setPersons(persons.map(p => p.id !== person.id ? p : returnedPerson))
-                        setNotification(`${returnedPerson.name}'s number updated`)
+                        setNotification(`${returnedPerson.name}'s number updated`, 'green')
                         setTimeout(() => {
-                            setNotification(null)
+                            setNotification([null, ''])
                         }, 3000)
+                    })
+                    .catch(error => {
+                        setNotification([`the person '${person.name}' was already deleted from the server`, 
+                                        'red'])
+                            setTimeout(() => {
+                                setNotification([null, ''])
+                            }, 3000)
+                        setPersons(persons.filter(p => p.id !== person.id))
                     })
             }
         } else {
@@ -45,9 +53,9 @@ const App = () => {
                 .create(personObject)
                 .then(personCreated => {
                     setPersons(persons.concat(personCreated))
-                    setNotification(`Added ${personCreated.name}`)
+                    setNotification([`Added ${personCreated.name}`, 'green'])
                         setTimeout(() => {
-                            setNotification(null)
+                            setNotification([null, ''])
                         }, 3000)
                 })
         }
@@ -62,15 +70,17 @@ const App = () => {
                 .deletePerson(id)
                 .then(() => {
                     setPersons(persons.filter(p => p.id !== id))
-                    setNotification(`Deleted ${person.name}`)
+                    setNotification([`Deleted ${person.name}`, 'green'])
                         setTimeout(() => {
-                            setNotification(null)
+                            setNotification([null, ''])
                         }, 3000)
                 })
                 .catch(error => {
-                    alert(
-                        `the person '${person.name}' was already deleted from the server`
-                    )
+                    setNotification([`the person '${person.name}' was already deleted from the server`, 
+                                    'red'])
+                        setTimeout(() => {
+                            setNotification([null, ''])
+                        }, 3000)
                     setPersons(persons.filter(p => p.id !== id))
                 })
         }
@@ -91,7 +101,7 @@ const App = () => {
     return (
         <div>
         <h2>Phonebook</h2>
-        <Notification message={notification} />
+        <Notification message={notification[0]} color={notification[1]} />
         <Filter value={filter} onChange={handleFilterChange} />
         <h2>Add a new</h2>
         <PersonForm
