@@ -1,6 +1,6 @@
 import React from 'react'
 
-const CountryInfo = ( {country} ) => {
+const CountryInfo = ( {country, filter, full } ) => {
     const img = {
         maxWidth: 200,
         maxHeight: 200,
