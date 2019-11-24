@@ -1,0 +1,19 @@
+{
+  "name": "puhelinluettelo-backend",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "\"echo \\'Error: no test specified\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[\"\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\\\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vade123/puhelinluettelo-backend.git"
+  },
+  "author": "Valtteri Valtanen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vade123/puhelinluettelo-backend/issues"
+  },
+  "homepage": "https://github.com/vade123/puhelinluettelo-backend#readme"
+}
