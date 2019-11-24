@@ -1,6 +1,7 @@
 import React from 'react'
+import Weather from './Weather'
 
-const CountryInfo = ( {country, filter, full } ) => {
+const CountryInfo = ( {country} ) => {
     const img = {
         maxWidth: 200,
         maxHeight: 200,
@@ -19,6 +20,7 @@ const CountryInfo = ( {country, filter, full } ) => {
             )}
             <br />
             <img style={img} src={country.flag} alt={country.name}/>
+            <Weather country={country.name} />
         </div>
     )
 }

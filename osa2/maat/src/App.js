@@ -26,7 +26,6 @@ const App = () => {
         setButtonClicked(true)
         setButtonCountry(country)
     }
-
     return (
         <div className='div'>
             find countries <input value={filter} onChange={handleFilterChange} />
