@@ -28,8 +28,11 @@ let persons = [
 
 app.use(bodyParser.json());
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'));
-morgan.token('data', (req, res) => { return JSON.stringify(req.body)});
-
+morgan.token('data', (req, res) => { 
+    if (req.method === 'POST') {
+        return JSON.stringify(req.body);
+    };
+});
 app.get('/api/persons', (req, res) => {
     res.json(persons);
 });
