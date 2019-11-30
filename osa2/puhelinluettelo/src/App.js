@@ -33,8 +33,9 @@ const App = () => {
                 personService
                     .update(person.id, personObject)
                     .then(returnedPerson => {
-                        setPersons(persons.map(p => p.id !== person.id ? p : returnedPerson))
-                        setNotification(`${returnedPerson.name}'s number updated`, 'green')
+                        console.log(returnedPerson.name)
+                        setPersons(persons.map(p => p.id !== returnedPerson.id ? p : returnedPerson))
+                        setNotification([`${returnedPerson.name}'s number updated`, 'green'])
                         setTimeout(() => {
                             setNotification([null, ''])
                         }, 3000)
@@ -42,9 +43,9 @@ const App = () => {
                     .catch(error => {
                         setNotification([`the person '${person.name}' was already deleted from the server`, 
                                         'red'])
-                            setTimeout(() => {
-                                setNotification([null, ''])
-                            }, 3000)
+                        setTimeout(() => {
+                            setNotification([null, ''])
+                        }, 3000)
                         setPersons(persons.filter(p => p.id !== person.id))
                     })
             }
@@ -54,9 +55,9 @@ const App = () => {
                 .then(personCreated => {
                     setPersons(persons.concat(personCreated))
                     setNotification([`Added ${personCreated.name}`, 'green'])
-                        setTimeout(() => {
-                            setNotification([null, ''])
-                        }, 3000)
+                    setTimeout(() => {
+                        setNotification([null, ''])
+                    }, 3000)
                 })
         }
         setNewName('')
@@ -71,16 +72,16 @@ const App = () => {
                 .then(() => {
                     setPersons(persons.filter(p => p.id !== id))
                     setNotification([`Deleted ${person.name}`, 'green'])
-                        setTimeout(() => {
-                            setNotification([null, ''])
-                        }, 3000)
+                    setTimeout(() => {
+                        setNotification([null, ''])
+                    }, 3000)
                 })
                 .catch(error => {
                     setNotification([`the person '${person.name}' was already deleted from the server`, 
                                     'red'])
-                        setTimeout(() => {
-                            setNotification([null, ''])
-                        }, 3000)
+                    setTimeout(() => {
+                        setNotification([null, ''])
+                    }, 3000)
                     setPersons(persons.filter(p => p.id !== id))
                 })
         }
