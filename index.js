@@ -55,7 +55,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
         .catch(error => next(error));
 });
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
     const body = req.body;
     if (!body.name) {
         return res.status(400).json({
@@ -67,20 +67,26 @@ app.post('/api/persons', (req, res) => {
             error: 'number missing'
         });
     };
-    if (persons.find(person => person.name === body.name) !== undefined) {
-        return res.status(400).json({
-            error: 'name must be unique'
-        });
-    };
-    
-    const person = new Person({
-        name: body.name,
-        number: body.number,
-    });
-
-    person.save().then(savedPerson => {
-        res.json(savedPerson.toJSON());
-    });
+    Person.exists({name: body.name})
+        .then(result => {
+            if (result) {
+                return res.status(400).json({
+                    error: 'name must be unique'
+                });
+            } else {
+                const person = new Person({
+                    name: body.name,
+                    number: body.number,
+                });
+            
+                person.save()
+                    .then(savedPerson => {
+                        res.json(savedPerson.toJSON());
+                    })
+                    .catch(error => next(error));
+            };
+        })
+        .catch(error => next(error));
 });
 
 app.put('/api/persons/:id', (req, res, next) => {
