@@ -8,12 +8,12 @@ const url = process.env.MONGODB_URI;
 console.log('connecting to', url);
 
 mongoose.connect(url, { useNewUrlParser: true })
-        .then(result => {
-            console.log('connected to mongoDB');
-        })
-        .catch(error => {
-            console.log('error connecting to mongoDB: ', error.message);
-        });
+    .then(() => {
+        console.log('connected to mongoDB');
+    })
+    .catch(error => {
+        console.log('error connecting to mongoDB: ', error.message);
+    });
 
 const personSchema = new mongoose.Schema({
     name: {
