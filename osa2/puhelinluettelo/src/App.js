@@ -4,6 +4,7 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import Notification from './components/Notification'
+import './App.css'
 
 const App = () => {
     const [ persons, setPersons] = useState([]) 
@@ -33,7 +34,6 @@ const App = () => {
                 personService
                     .update(person.id, personObject)
                     .then(returnedPerson => {
-                        console.log(returnedPerson.name)
                         setPersons(persons.map(p => p.id !== returnedPerson.id ? p : returnedPerson))
                         setNotification([`${returnedPerson.name}'s number updated`, 'green'])
                         setTimeout(() => {
