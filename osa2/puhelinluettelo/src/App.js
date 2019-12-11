@@ -60,7 +60,6 @@ const App = () => {
                     }, 3000)
                 })
                 .catch(error => {
-                    console.log(error.response.data)
                     setNotification([error.response.data.error, 'red'])
                     setTimeout(() => {
                         setNotification([null, ''])
