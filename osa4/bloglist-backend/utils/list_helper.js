@@ -25,7 +25,7 @@ const mostBlogs = (blogs) => {
         return null;
     } else {
         const mostBlogsAuthor = lodash.max(Object.keys(obj), a  => obj[a]);
-        const mostBlogsCount = Math.max.apply(null, Object.values(obj));
+        const mostBlogsCount = lodash(obj).values().max();
         return {
             'author': mostBlogsAuthor,
             'blogs': mostBlogsCount
