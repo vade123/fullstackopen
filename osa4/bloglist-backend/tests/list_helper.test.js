@@ -93,14 +93,14 @@ describe('most likes', () => {
 describe('most blogs', () => {
     test('of a empty list is empty string', () => {
         const result = listHelper.mostBlogs([]);
-        expect(result).toBe('');
+        expect(result).toEqual(null);
     });
     test('when a list has only one blog equals the author of that', () => {
         const result = listHelper.mostBlogs([ blogs[1]]);
-        expect(result).toBe('Edsger W. Dijkstra');
+        expect(result).toEqual({ 'author': 'Edsger W. Dijkstra', 'blogs': 1 });
     });
     test('of a bigger list is correct', () => {
         const result = listHelper.mostBlogs(blogs);
-        expect(result).toBe('Robert C. Martin');
+        expect(result).toEqual({ 'author':'Robert C. Martin', 'blogs': 3 });
     });
 });

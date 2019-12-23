@@ -22,9 +22,14 @@ const favouriteBlog = (blogs) => {
 const mostBlogs = (blogs) => {
     const obj = lodash.countBy(blogs, blog => blog.author);
     if (blogs.length === 0) {
-        return '';
+        return null;
     } else {
-        return lodash.max(Object.keys(obj), a  => obj[a]);
+        const mostBlogsAuthor = lodash.max(Object.keys(obj), a  => obj[a]);
+        const mostBlogsCount = Math.max.apply(null, Object.values(obj));
+        return {
+            'author': mostBlogsAuthor,
+            'blogs': mostBlogsCount
+        };
     }
 };
 
