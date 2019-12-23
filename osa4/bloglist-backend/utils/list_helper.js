@@ -9,7 +9,17 @@ const totalLikes = (blogs) => {
         return blogs.reduce(reducer, 0);
     }
 };
+const favouriteBlog = (blogs) => {
+    const reducer  = (pv, cv) => (pv.likes > cv.likes) ? pv : cv;
+    if (blogs.length === 0) {
+        return null;
+    } else {
+        return blogs.reduce(reducer);
+    }
+};
+
 module.exports = {
     dummy,
-    totalLikes
+    totalLikes,
+    favouriteBlog
 };

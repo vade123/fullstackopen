@@ -52,7 +52,6 @@ const blogs = [
 ];
 
 test('dummy returns one', () => {
-    const blogs = [];
     const result = listHelper.dummy(blogs);
     expect(result).toBe(1);
 });
@@ -70,5 +69,23 @@ describe('total likes', () => {
     test('of a bigger list is calculated right', () => {
         const result = listHelper.totalLikes(blogs);
         expect(result).toBe(36);
+    });
+});
+
+describe('most likes', () => {
+    const mostLikes = blogs[2];
+
+    test('of a empty list is null', () => {
+        const result = listHelper.favouriteBlog([]);
+        expect(result).toEqual(null);
+    });
+    test('when a list has only one blogs equals the likes of that', () => {
+        const listWithOneBlog = [ blogs[1] ];
+        const result = listHelper.favouriteBlog(listWithOneBlog);
+        expect(result).toEqual(listWithOneBlog[0]);
+    });
+    test('of a bigger list is correct', () => {
+        const result = listHelper.favouriteBlog(blogs);
+        expect(result).toEqual(mostLikes);
     });
 });
