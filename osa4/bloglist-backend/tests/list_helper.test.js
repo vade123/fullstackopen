@@ -79,7 +79,7 @@ describe('most likes', () => {
         const result = listHelper.favouriteBlog([]);
         expect(result).toEqual(null);
     });
-    test('when a list has only one blogs equals the likes of that', () => {
+    test('when a list has only one blog equals to that', () => {
         const listWithOneBlog = [ blogs[1] ];
         const result = listHelper.favouriteBlog(listWithOneBlog);
         expect(result).toEqual(listWithOneBlog[0]);
@@ -87,5 +87,20 @@ describe('most likes', () => {
     test('of a bigger list is correct', () => {
         const result = listHelper.favouriteBlog(blogs);
         expect(result).toEqual(mostLikes);
+    });
+});
+
+describe('most blogs', () => {
+    test('of a empty list is empty string', () => {
+        const result = listHelper.mostBlogs([]);
+        expect(result).toBe('');
+    });
+    test('when a list has only one blog equals the author of that', () => {
+        const result = listHelper.mostBlogs([ blogs[1]]);
+        expect(result).toBe('Edsger W. Dijkstra');
+    });
+    test('of a bigger list is correct', () => {
+        const result = listHelper.mostBlogs(blogs);
+        expect(result).toBe('Robert C. Martin');
     });
 });
