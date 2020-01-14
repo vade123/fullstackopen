@@ -32,10 +32,31 @@ const mostBlogs = (blogs) => {
         };
     }
 };
+const mostLikes = (blogs) => {
+    if (blogs.length === 0) {
+        return null;
+    } else {
+        const stats = {};
+        blogs.forEach((blog) => {
+            if (stats[blog.author] === undefined) {
+                stats[blog.author] = blog.likes;
+            } else {
+                stats[blog.author] += blog.likes;
+            }
+        });
+        const mostLikesAuthor = Object.keys(stats).reduce((a, b) => stats[a] > stats[b] ? a : b);
+        const mostLikesCount = lodash(stats).values().max();
+        return {
+            'author': mostLikesAuthor,
+            'likes': mostLikesCount
+        };
+    }
+};
 
 module.exports = {
     dummy,
     totalLikes,
     favouriteBlog,
-    mostBlogs
+    mostBlogs,
+    mostLikes
 };
