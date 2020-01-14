@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const config = require('./utils/config');
 const blogsRouter = require('./controllers/blogs');
 
-mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true });
+mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
 app.use(cors());
