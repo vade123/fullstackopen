@@ -16,16 +16,24 @@ beforeEach(async () => {
     }
 });
 
-test('notes are returned as json', async () => {
+test('blogs are returned as json', async () => {
     await api
         .get('/api/blogs')
         .expect(200)
         .expect('Content-Type', /application\/json/);
 });
 
-test('all notes are returned', async () => {
+test('all blogs are returned', async () => {
     const response = await api.get('/api/blogs');
     expect(response.body.length).toBe(helper.initialBlogs.length);
+});
+
+test('all returned blogs have a field "id"', async () => {
+    const res = await api.get('/api/blogs');
+    res.body.forEach(blog => {
+        expect(blog.id).toBeDefined();
+        expect(blog._id).toBeUndefined();
+    });
 });
 
 afterAll(() => {
