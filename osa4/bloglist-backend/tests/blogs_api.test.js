@@ -77,6 +77,35 @@ test('likes are initialized to 0', async () => {
 
 });
 
+test('blogs with missing fields "title" or "url" are not added', async () => {
+    const newBlog1 = {
+        _id: '5a422bc61b54a676234d17fc',
+        title: 'Type wars',
+        author: 'Robert C. Martin',
+    };
+    const newBlog2 = {
+        _id: '5a422bc61b54a676234d17fc',
+        author: 'Robert C. Martin',
+        url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
+    };
+    const newBlog3 = {
+        _id: '5a422bc61b54a676234d17fc',
+        author: 'Robert C. Martin',
+    };
+    await api
+        .post('/api/blogs')
+        .send(newBlog1)
+        .expect(400);
+    await api
+        .post('/api/blogs')
+        .send(newBlog2)
+        .expect(400);
+    await api
+        .post('/api/blogs')
+        .send(newBlog3)
+        .expect(400);
+});
+
 afterAll(() => {
     mongoose.connection.close();
 });
