@@ -7,8 +7,7 @@ const config = require('./utils/config');
 const blogsRouter = require('./controllers/blogs');
 const mw = require('./utils/middleware');
 
-mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
-
+mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
 
 app.use(cors());
 app.use(bodyParser.json());

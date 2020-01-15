@@ -106,6 +106,18 @@ test('blogs with missing fields "title" or "url" are not added', async () => {
         .expect(400);
 });
 
+test('blogs can be removed', async () => {
+    await api
+        .delete('/api/blogs/5a422aa71b54a676234d17f8')
+        .expect(204);
+
+    const blogsAtEnd = await helper.blogsInDb();
+    expect(blogsAtEnd.length).toBe(helper.initialBlogs.length - 1);
+
+    const titles = blogsAtEnd.map(b => b.title);
+    expect(titles).not.toContain('Go To Statement Considered Harmful');
+});
+
 afterAll(() => {
     mongoose.connection.close();
 });
