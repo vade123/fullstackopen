@@ -118,6 +118,27 @@ test('blogs can be removed', async () => {
     expect(titles).not.toContain('Go To Statement Considered Harmful');
 });
 
+test('blogs can be updated', async () => {
+    const updatedBlog = {
+        _id: '5a422ba71b54a676234d17fb',
+        title: 'TDD harms architecture',
+        author: 'Robert C. Martin',
+        url: 'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
+        likes: 10,
+        __v: 0
+    };
+
+    const result = await api
+        .put('/api/blogs/5a422ba71b54a676234d17fb')
+        .send(updatedBlog)
+        .expect('Content-Type', /application\/json/);
+
+    expect(result.body.likes).toBe(10);
+
+    const blogsAtEnd = await helper.blogsInDb();
+    expect(blogsAtEnd.length).toBe(helper.initialBlogs.length);
+});
+
 afterAll(() => {
     mongoose.connection.close();
 });
