@@ -1,0 +1,2 @@
+## Full Stack Open 2019
+An open university course organised by University of Helsinki, focusing on modern web development technologies (JavaScript, React, Redux, Node.js,MongoDB, and GraphQL). Most of the commits are a full implementation for a single exercise (not the best convention, w/e) found on the course [website] (https://fullstackopen.com/). This repository contains multiple apps and is mainly used for studying, not so much to show off the code.
