@@ -5,18 +5,20 @@ const User = require('../models/user');
 usersRouter.post('/', async (req, res, next) => {
   try {
     const body = req.body;
-    const saltRounds = 10;
-    const passwordHash = await bcrypt.hash(body.password, saltRounds);
+    if (body.password.length < 3) {
+      res.status(400).json({ error: `User validation failed: username: Path 'password' ('${body.password}') is shorter than the minimum allowed length (3).` });
+    } else {
+      const saltRounds = 10;
+      const passwordHash = await bcrypt.hash(body.password, saltRounds);
+      const user = new User({
+        username: body.username,
+        name: body.name,
+        passwordHash
+      });
 
-    const user = new User({
-      username: body.username,
-      name: body.name,
-      passwordHash
-    });
-
-    const savedUser = await user.save();
-    res.json(savedUser);
-
+      const savedUser = await user.save();
+      res.status(201).json(savedUser);
+    }
   } catch(err) {
     next(err);
   }
