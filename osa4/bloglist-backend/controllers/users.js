@@ -5,8 +5,11 @@ const User = require('../models/user');
 usersRouter.post('/', async (req, res, next) => {
   try {
     const body = req.body;
-    if (body.password.length < 3) {
-      res.status(400).json({ error: `User validation failed: username: Path 'password' ('${body.password}') is shorter than the minimum allowed length (3).` });
+    if (!body.password) {
+      res.status(400).json({ error: 'User validation failed: password: Path `password` is missing' });
+    }
+    else if (body.password.length < 3) {
+      res.status(400).json({ error: `User validation failed: password: Path 'password' ('${body.password}') is shorter than the minimum allowed length (3).` });
     } else {
       const saltRounds = 10;
       const passwordHash = await bcrypt.hash(body.password, saltRounds);
