@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 
 import Blog from './components/Blog';
+import BlogForm from './components/BlogForm';
 import blogService from './services/blogs';
 import loginService from './services/login';
 
@@ -30,6 +31,7 @@ const App = () => {
     window.localStorage.setItem(
       'loggedBloglistUser', JSON.stringify(user)
     );
+    blogService.setToken(user.token);
     setUser(user);
     setUsername('');
     setPassword('');
@@ -66,7 +68,12 @@ const App = () => {
       </form>
     </div>
   );
-
+  
+  const postBlog = async (newBlog) => {
+    const blog = await blogService.create(newBlog);
+    setBlogs(blogs.concat(blog));
+  };
+  
   const showBlogs = () => (
     <div>
       <h2>blogs</h2>
@@ -75,6 +82,7 @@ const App = () => {
         <button onClick={handleLogout}>logout</button>
       </div>
       <br />
+      <BlogForm postBlog={postBlog} />
       {blogs.map(blog => 
         <Blog key={blog.id} blog={blog} />)}
     </div>
