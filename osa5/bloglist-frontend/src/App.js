@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 
 import Blog from './components/Blog';
 import BlogForm from './components/BlogForm';
+import Notification from './components/Notification';
 import blogService from './services/blogs';
 import loginService from './services/login';
 
@@ -10,6 +11,7 @@ const App = () => {
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [notification, setNotification] = useState([null, '']);
 
   useEffect(() => {
     blogService
@@ -27,14 +29,21 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    const user = await loginService.login({ username, password });
-    window.localStorage.setItem(
-      'loggedBloglistUser', JSON.stringify(user)
-    );
-    blogService.setToken(user.token);
-    setUser(user);
-    setUsername('');
-    setPassword('');
+    try {
+      const user = await loginService.login({ username, password });
+      window.localStorage.setItem(
+        'loggedBloglistUser', JSON.stringify(user)
+      );
+      blogService.setToken(user.token);
+      setUser(user);
+      setUsername('');
+      setPassword('');
+    } catch(err) {
+      setNotification(['wrong username or password', 'red']);
+      setTimeout(()=> {
+        setNotification([null, '']);
+      }, 3000);
+    }
   };
 
   const handleLogout = () => {
@@ -45,6 +54,7 @@ const App = () => {
   const loginForm = () => (
     <div>
       <h2>log in to application</h2>
+      <Notification message={notification[0]} color={notification[1]} />
       <form onSubmit = {handleLogin}>
         <div>
           username
@@ -72,11 +82,16 @@ const App = () => {
   const postBlog = async (newBlog) => {
     const blog = await blogService.create(newBlog);
     setBlogs(blogs.concat(blog));
+    setNotification([`a new blog ${blog.title} by ${blog.author} added`, 'green']);
+    setTimeout(()=> {
+      setNotification([null, '']);
+    }, 3000);
   };
   
   const showBlogs = () => (
     <div>
       <h2>blogs</h2>
+      <Notification message={notification[0]} color={notification[1]} />
       <div>
         {user.name} logged in
         <button onClick={handleLogout}>logout</button>
