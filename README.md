@@ -1,5 +1,5 @@
-# puhelinluettelo-backend
-Full Stack Open osa 3, puhelinluettelosovelluksen backend.
-For a better description see this [readme](https://github.com/vade123/fullstackopen/).
+## Full Stack Open 2019
+An open university course organised by University of Helsinki, focusing on modern web development technologies (JavaScript, React, Redux, Node.js,MongoDB, and GraphQL). 
 
-Running at https://stark-fortress-23062.herokuapp.com/ with the frontend found in repo fullstackopen/osa2/puhelinluettelo
+This repository is divided into the different parts of the course, each part containing multiple apps. Most of the commits are a full implementation for a single exercise (not the best convention, w/e) found on the course [website](https://fullstackopen.com/). This repository is mainly used for studying, and is not organised to show off the code (which is not necessarily of the best quality).
+
