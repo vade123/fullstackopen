@@ -92,6 +92,11 @@ const App = () => {
     }, 3000);
   };
   
+  const addLike = async (blog) => {
+    const updated = await blogService.update(blog);
+    setBlogs(blogs.map(b => b.id !== updated.id ? b : updated));
+  };
+
   const showBlogs = () => (
     <div>
       <h2>blogs</h2>
@@ -105,7 +110,7 @@ const App = () => {
         <BlogForm postBlog={postBlog} />
       </Toggable>
       {blogs.map(blog => 
-        <Blog key={blog.id} blog={blog} />)}
+        <Blog key={blog.id} blog={blog} addLike={() => addLike(blog)} />)}
     </div>
   );
 

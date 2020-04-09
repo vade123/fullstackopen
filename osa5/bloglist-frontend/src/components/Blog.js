@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, addLike }) => {
   const [ toggle, setToggle ] = useState(false);
 
   const blogStyle = {
@@ -13,17 +13,17 @@ const Blog = ({ blog }) => {
   
   const showLess = () => (
     <div>
-      {blog.title} {blog.author} <button onClick={()=>setToggle(!toggle)}>view</button>
+      {blog.title} {blog.author} <button onClick={() => setToggle(!toggle)}>view</button>
     </div>
   );
   
   const showMore = () => (
     <div>
       <div >
-        {blog.title} <button onClick={()=>setToggle(!toggle)}>hide</button> <br />
+        {blog.title} <button onClick={() => setToggle(!toggle)}>hide</button> <br />
       </div>
       {blog.url} <br />
-      likes:{blog.likes} <button onClick={() => console.log('like')}>like</button><br />
+      likes:{blog.likes} <button onClick={addLike}>like</button><br />
       {blog.author}
     </div>
   );
