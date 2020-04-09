@@ -1,9 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-const Blog = ({ blog }) => (
-  <div>
-    {blog.title} {blog.author}
-  </div>
-);
+const Blog = ({ blog }) => {
+  const [ toggle, setToggle ] = useState(false);
+
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: 'solid',
+    borderWidth: 1,
+    marginBottom: 5,
+  };
+  
+  const showLess = () => (
+    <div>
+      {blog.title} {blog.author} <button onClick={()=>setToggle(!toggle)}>view</button>
+    </div>
+  );
+  
+  const showMore = () => (
+    <div>
+      <div >
+        {blog.title} <button onClick={()=>setToggle(!toggle)}>hide</button> <br />
+      </div>
+      {blog.url} <br />
+      likes:{blog.likes} <button onClick={() => console.log('like')}>like</button><br />
+      {blog.author}
+    </div>
+  );
+  
+  return (
+    <div style={blogStyle}>
+      {toggle === false && showLess()}
+      {toggle === true && showMore()}
+    </div>
+  );
+};
 
 export default Blog;
