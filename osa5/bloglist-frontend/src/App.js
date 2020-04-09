@@ -28,6 +28,8 @@ const App = () => {
     }
   }, []);
 
+  const blogFormRef = React.createRef();
+
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
@@ -81,6 +83,7 @@ const App = () => {
   );
   
   const postBlog = async (newBlog) => {
+    blogFormRef.current.toggleVisibility();
     const blog = await blogService.create(newBlog);
     setBlogs(blogs.concat(blog));
     setNotification([`a new blog ${blog.title} by ${blog.author} added`, 'green']);
@@ -98,7 +101,7 @@ const App = () => {
         <button onClick={handleLogout}>logout</button>
       </div>
       <br />
-      <Toggable buttonLabel="new blog">
+      <Toggable buttonLabel="new blog" ref={blogFormRef}>
         <BlogForm postBlog={postBlog} />
       </Toggable>
       {blogs.map(blog => 

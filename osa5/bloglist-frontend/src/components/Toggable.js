@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+/* eslint-disable react/display-name */
 
-const Toggable  = (props) => {
+import React, { useImperativeHandle, useState } from 'react';
+
+const Toggable = React.forwardRef((props, ref) => {
   const [visible, setVisible] = useState(false);
 
   const hideWhenVisible = { display: visible ? 'none' : '' };
@@ -9,6 +11,12 @@ const Toggable  = (props) => {
   const toggleVisibility = () => {
     setVisible(!visible);
   };
+
+  useImperativeHandle(ref, () => {
+    return {
+      toggleVisibility
+    };
+  });
 
   return (
     <div>
@@ -21,6 +29,6 @@ const Toggable  = (props) => {
       </div>
     </div>
   );
-};
+});
 
 export default Toggable;
