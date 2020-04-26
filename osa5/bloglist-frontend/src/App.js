@@ -15,9 +15,11 @@ const App = () => {
   const [notification, setNotification] = useState([null, '']);
 
   useEffect(() => {
-    blogService
-      .getAll()
-      .then(result => setBlogs(result));
+    const fetchAll = async () => {
+      const result = await blogService.getAll();
+      setBlogsSorted(result);
+    };
+    fetchAll();
   }, []);
 
   useEffect(() => {
@@ -29,6 +31,10 @@ const App = () => {
   }, []);
 
   const blogFormRef = React.createRef();
+
+  const setBlogsSorted = (array) => {
+    setBlogs(array.sort((a, b) => b.likes - a.likes));
+  };
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -85,7 +91,7 @@ const App = () => {
   const postBlog = async (newBlog) => {
     blogFormRef.current.toggleVisibility();
     const blog = await blogService.create(newBlog);
-    setBlogs(blogs.concat(blog));
+    setBlogsSorted(blogs.concat(blog));
     setNotification([`a new blog ${blog.title} by ${blog.author} added`, 'green']);
     setTimeout(()=> {
       setNotification([null, '']);
@@ -94,7 +100,7 @@ const App = () => {
   
   const addLike = async (blog) => {
     const updated = await blogService.update(blog);
-    setBlogs(blogs.map(b => b.id !== updated.id ? b : updated));
+    setBlogsSorted(blogs.map(b => b.id !== updated.id ? b : updated));
   };
 
   const showBlogs = () => (
