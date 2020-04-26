@@ -10,9 +10,10 @@ blogsRouter.get('/', async (request, response) => {
 
 blogsRouter.post('/', async (req, res, next) => {
   const body = req.body;
+  const token = req.token;
   try {
-    const decodedToken = jwt.verify(req.token, process.env.SECRET);
-    if (!req.token || !decodedToken.id) {
+    const decodedToken = jwt.verify(token, process.env.SECRET);
+    if (!token || !decodedToken.id) {
       return res.status(401).json({ error: 'token missing or invalid ' });
     }
     const user = await User.findById(decodedToken.id);
@@ -28,7 +29,7 @@ blogsRouter.post('/', async (req, res, next) => {
     const savedBlog = await blog.save();
     user.blogs = user.blogs.concat(savedBlog._id);
     await user.save();
-    res.status(201).json(savedBlog.toJSON());
+    res.status(201).json(savedBlog);
 
   } catch(error) {
     next(error);
@@ -36,14 +37,16 @@ blogsRouter.post('/', async (req, res, next) => {
 });
 
 blogsRouter.delete('/:id', async (req, res, next) => {
+  const token = req.token;
   try {
     const blog = await Blog.findById(req.params.id);
     if (!blog) {
       return res.status(404).json({ error: 'not found' });
     }
-    const decodedToken = jwt.verify(req.token, process.env.SECRET);
-
-    if (!blog.user.toString() === decodedToken.id) {
+    const decodedToken = jwt.verify(token, process.env.SECRET);
+    console.log(blog.user.toString());
+    console.log(decodedToken.id);
+    if (blog.user.toString() !== decodedToken.id) {
       return res.status(401).json({ error: 'token missing or invalid ' });
     }
 
@@ -55,25 +58,26 @@ blogsRouter.delete('/:id', async (req, res, next) => {
 });
 
 blogsRouter.put('/:id', async (req, res, next) => {
-  const newBlog = new Blog({
-    _id: req.params.id,
-    title: req.body.title,
-    author: req.body.author,
-    url: req.body.url,
-    likes: req.body.likes,
-    user: req.body.user,
-  });
+  const token = req.token;
+
   try {
     const blog = await Blog.findById(req.params.id);
     if (!blog) {
       return res.status(404).json({ error: 'not found' });
     }
 
-    const decodedToken = jwt.verify(req.token, process.env.SECRET);
-    if (!blog.user.toString() === decodedToken.id) {
+    const decodedToken = jwt.verify(token, process.env.SECRET);
+    if (blog.user.toString() !== decodedToken.id) {
       return res.status(401).json({ error: 'token missing or invalid ' });
     }
-
+    const newBlog = new Blog({
+      _id: req.params.id,
+      title: req.body.title,
+      author: req.body.author,
+      url: req.body.url,
+      likes: req.body.likes,
+      user: decodedToken.id,
+    });
     const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, newBlog, { new: true } );
     res.json(updatedBlog.toJSON());
   } catch(error) {

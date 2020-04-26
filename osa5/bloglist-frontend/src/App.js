@@ -27,6 +27,7 @@ const App = () => {
     if (loggedUser) {
       const user = JSON.parse(loggedUser);
       setUser(user);
+      blogService.setToken(user.token);
     }
   }, []);
 
@@ -103,6 +104,15 @@ const App = () => {
     setBlogsSorted(blogs.map(b => b.id !== updated.id ? b : updated));
   };
 
+  const deleteBlog = async (blog) => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      const res = await blogService.deleteBlog(blog);
+      if (res === 204) {
+        setBlogsSorted(blogs.filter(b => b.id !== blog.id));
+      }
+    }
+  };
+
   const showBlogs = () => (
     <div>
       <h2>blogs</h2>
@@ -116,7 +126,7 @@ const App = () => {
         <BlogForm postBlog={postBlog} />
       </Toggable>
       {blogs.map(blog => 
-        <Blog key={blog.id} blog={blog} addLike={() => addLike(blog)} />)}
+        <Blog key={blog.id} blog={blog} addLike={() => addLike(blog)} deleteBlog={()=>deleteBlog(blog)} currentUser={user} />)}
     </div>
   );
 
