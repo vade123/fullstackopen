@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Blog from './components/Blog';
 import BlogForm from './components/BlogForm';
@@ -50,7 +50,7 @@ const App = () => {
       setPassword('');
     } catch(err) {
       setNotification(['wrong username or password', 'red']);
-      setTimeout(()=> {
+      setTimeout(() => {
         setNotification([null, '']);
       }, 3000);
     }
@@ -68,11 +68,11 @@ const App = () => {
       <form onSubmit = {handleLogin}>
         <div>
           username
-          <input 
+          <input
             type="text"
             value={username}
             name="Username"
-            onChange={({ target }) => setUsername(target.value)} 
+            onChange={({ target }) => setUsername(target.value)}
           />
           <div>
             password
@@ -88,17 +88,17 @@ const App = () => {
       </form>
     </div>
   );
-  
+
   const postBlog = async (newBlog) => {
     blogFormRef.current.toggleVisibility();
     const blog = await blogService.create(newBlog);
     setBlogsSorted(blogs.concat(blog));
     setNotification([`a new blog ${blog.title} by ${blog.author} added`, 'green']);
-    setTimeout(()=> {
+    setTimeout(() => {
       setNotification([null, '']);
     }, 3000);
   };
-  
+
   const addLike = async (blog) => {
     const updated = await blogService.update(blog);
     setBlogsSorted(blogs.map(b => b.id !== updated.id ? b : updated));
@@ -125,8 +125,8 @@ const App = () => {
       <Toggable buttonLabel="new blog" ref={blogFormRef}>
         <BlogForm postBlog={postBlog} />
       </Toggable>
-      {blogs.map(blog => 
-        <Blog key={blog.id} blog={blog} addLike={() => addLike(blog)} deleteBlog={()=>deleteBlog(blog)} currentUser={user} />)}
+      {blogs.map(blog =>
+        <Blog key={blog.id} blog={blog} addLike={() => addLike(blog)} deleteBlog={() => deleteBlog(blog)} currentUser={user} />)}
     </div>
   );
 

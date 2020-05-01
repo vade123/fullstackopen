@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import propTypes from 'prop-types';
+
 const BlogForm = ({ postBlog }) => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
@@ -24,35 +26,39 @@ const BlogForm = ({ postBlog }) => {
       <form onSubmit={handleCreate}>
         <div>
           title:
-          <input 
+          <input
             type="text"
             value={title}
             name="Title"
-            onChange={({target})=>setTitle(target.value)}
+            onChange={({ target }) => setTitle(target.value)}
           />
         </div>
         <div>
           author:
-          <input 
+          <input
             type="text"
             value={author}
             name="Author"
-            onChange={({target})=>setAuthor(target.value)}
+            onChange={({ target }) => setAuthor(target.value)}
           />
         </div>
         <div>
           url:
-          <input 
+          <input
             type="text"
             value={url}
             name="Url"
-            onChange={({target})=>setUrl(target.value)}
+            onChange={({ target }) => setUrl(target.value)}
           />
         </div>
         <button type="submit">create</button>
       </form>
     </div>
   );
+};
+
+BlogForm.propTypes = {
+  postBlog: propTypes.func.isRequired
 };
 
 export default BlogForm;
