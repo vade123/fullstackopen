@@ -40,3 +40,25 @@ test('render all content after button click', () => {
   expect(component.container).toHaveTextContent('testurl.com');
   expect(component.container).toHaveTextContent(9000);
 });
+
+test('like-button', () => {
+  const blog = {
+    title: 'test',
+    author: 'testipena',
+    url: 'testurl.com',
+    likes: 9000,
+    user: {
+      username: 'asd'
+    }
+  };
+  const mockHandler = jest.fn();
+  const component = render(
+    <Blog blog={blog} addLike={mockHandler} currentUser={{ username: 'asd' }} />
+  );
+  const button = component.getByText('view');
+  fireEvent.click(button);
+  const likeButton = component.getByText('like');
+  fireEvent.click(likeButton);
+  fireEvent.click(likeButton);
+  expect(mockHandler.mock.calls).toHaveLength(2);
+});
