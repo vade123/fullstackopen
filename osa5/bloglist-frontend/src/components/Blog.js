@@ -23,7 +23,7 @@ const Blog = ({ blog, addLike, deleteBlog, currentUser }) => {
   );
   const showMore = () => (
     <div>
-      <div >
+      <div id='show-more'>
         {blog.title} <button onClick={() => setToggle(!toggle)}>hide</button> <br />
       </div>
       {blog.url} <br />
@@ -34,7 +34,7 @@ const Blog = ({ blog, addLike, deleteBlog, currentUser }) => {
   );
 
   return (
-    <div style={blogStyle}>
+    <div className="blog" style={blogStyle}>
       {toggle === false && showLess()}
       {toggle === true && showMore()}
     </div>

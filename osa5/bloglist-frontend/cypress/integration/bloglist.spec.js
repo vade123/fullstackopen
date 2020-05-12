@@ -72,5 +72,31 @@ describe('Blog app', function() {
         cy.get('html').should('not.contain', 'testipenan bloki');
       });
     });
+
+    describe('and multiple blogs exist', function() {
+      beforeEach(function() {
+        cy.createBlog({
+          title: 'testipenan bloki',
+          author: 'pertti',
+          url: 'facebook.com'
+        });
+        cy.createBlog({
+          title: 'testipenan bloki 2',
+          author: 'pertti',
+          url: 'facebook.com'
+        });
+      });
+      it('most likes is on top', function() {
+        cy.contains('testipenan bloki 2')
+          .contains('view')
+          .click();
+        cy.contains('like').click();
+
+        cy.get('.blog')
+          .then(blogs => {
+            cy.wrap(blogs[1]).contains('likes:1');
+          });
+      });
+    });
   });
 });
