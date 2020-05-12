@@ -36,4 +36,20 @@ describe('Blog app', function() {
       cy.get('html').should('not.contain', 'Testi Käyttäjä logged in');
     });
   });
+
+  describe.only('when logged in', function() {
+    beforeEach(function() {
+      cy.login({ username:'testi', password:'salasana' });
+    });
+    it('A blog can be created', function() {
+      cy.contains('new blog').click();
+      cy.get('#title').type('testipenan bloki');
+      cy.get('#author').type('pertti');
+      cy.get('#url').type('facebook.com');
+      cy.get('#submit-button').click();
+
+      cy.contains('testipenan bloki');
+      cy.contains('pertti');
+    });
+  });
 });
