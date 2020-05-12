@@ -66,6 +66,11 @@ describe('Blog app', function() {
         cy.get('#like-button').click();
         cy.contains('likes:1');
       });
+      it('can be removed', function() {
+        cy.contains('view').click();
+        cy.contains('delete blog').click();
+        cy.get('html').should('not.contain', 'testipenan bloki');
+      });
     });
   });
 });

@@ -10,7 +10,7 @@ const Blog = ({ blog, addLike, deleteBlog, currentUser }) => {
     borderWidth: 1,
     marginBottom: 5,
   };
-  
+
   const showLess = () => (
     <div>
       {blog.title} {blog.author} <button onClick={() => setToggle(!toggle)}>view</button>
@@ -32,7 +32,7 @@ const Blog = ({ blog, addLike, deleteBlog, currentUser }) => {
       {currentUser.username === blog.user.username && deleteButton()}
     </div>
   );
-  
+
   return (
     <div style={blogStyle}>
       {toggle === false && showLess()}
