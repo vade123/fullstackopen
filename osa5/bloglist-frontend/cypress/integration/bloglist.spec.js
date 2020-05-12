@@ -51,5 +51,21 @@ describe('Blog app', function() {
       cy.contains('testipenan bloki');
       cy.contains('pertti');
     });
+
+    describe('and a blog exists', function() {
+      beforeEach(function() {
+        cy.createBlog({
+          title: 'testipenan bloki',
+          author: 'pertti',
+          url: 'facebook.com'
+        });
+      });
+
+      it('it can be liked', function() {
+        cy.contains('view').click();
+        cy.get('#like-button').click();
+        cy.contains('likes:1');
+      });
+    });
   });
 });
