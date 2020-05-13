@@ -24,7 +24,9 @@ const reducer = (state = initialState, action) => {
   console.log('action', action)
   switch(action.type) {
     case 'VOTE':
-      return state.map(obj => obj.id === action.data.id ? { ...obj, votes: obj.votes + 1 } : obj )
+      return state.map(obj => obj.id === action.data.id ? { ...obj, votes: obj.votes + 1 } : obj)
+    case 'ADD':
+      return state.concat(asObject(action.data.content))
     default: return state
   }
 }
