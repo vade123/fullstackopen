@@ -85,16 +85,25 @@ describe('Blog app', function() {
           author: 'pertti',
           url: 'facebook.com'
         });
+
+        cy.contains('testipenan bloki').parent().as('blog1');
+        cy.contains('testipenan bloki 2').parent().as('blog2');
       });
       it('most likes is on top', function() {
-        cy.contains('testipenan bloki 2')
-          .contains('view')
-          .click();
-        cy.contains('like').click();
+        cy.get('@blog1').contains('view').click();
+        cy.get('@blog2').contains('view').click();
+        cy.get('@blog1').contains('like').as('like1');
+        cy.get('@blog2').contains('like').as('like2');
+
+        cy.get('@like1').click();
+        cy.get('@like2').click();
+        cy.get('@like2').click();
+        cy.get('@like2').click();
+        cy.get('@like1').click();
 
         cy.get('.blog')
           .then(blogs => {
-            cy.wrap(blogs[1]).contains('likes:1');
+            cy.wrap(blogs[0]).contains('likes:3');
           });
       });
     });
