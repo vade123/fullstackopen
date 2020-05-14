@@ -5,7 +5,7 @@ const reducer = (state = [], action) => {
   console.log('action', action)
   switch(action.type) {
     case 'VOTE':
-      return state.map(obj => obj.id === action.data.id ? { ...obj, votes: obj.votes + 1 } : obj)
+      return state.map(obj => obj.id === action.data.id ? action.data : obj)
     case 'ADD':
       return state.concat(action.data)
     case 'INIT':
@@ -15,9 +15,12 @@ const reducer = (state = [], action) => {
 }
 
 export const voteAnecdote = ( id ) => {
-  return {
-    type: 'VOTE',
-    data: { id }
+  return async dispatch => {
+    const obj = await anecdoteService.vote(id)
+    dispatch({
+      type: 'VOTE',
+      data: obj
+    })
   }
 }
 
