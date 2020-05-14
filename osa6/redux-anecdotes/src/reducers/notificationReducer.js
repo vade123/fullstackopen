@@ -1,18 +1,23 @@
-const initialState = "initial notification"
-
-const reducer = (state = initialState, action) => {
+const reducer = (state = '', action) => {
   switch(action.type) {
-    case 'CHANGE':
-      return action.data
+    case 'SET':
+      return action.data.content
+    case 'RESET':
+      return ''
     default: return state
   }
 }
 
-export const changeNotification = ( content ) => {
+export const setNotification = ( content ) => {
   return {
-    type: 'CHANGE',
+    type: 'SET',
     data: { content }
   }
 }
 
+export const resetNotification = () => {
+  return {
+    type: 'RESET'
+  }
+}
 export default reducer
