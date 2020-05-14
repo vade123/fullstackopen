@@ -4,7 +4,7 @@ import React from 'react'
 import { voteAnecdote } from '../reducers/anecdoteReducer'
 
 const AnecodeList = (props) => {
-  const anecdotes = useSelector(state => state)
+  const anecdotes = useSelector(state => state.anecdotes)
   const dispatch = useDispatch()
   
   const vote = (id) => {
