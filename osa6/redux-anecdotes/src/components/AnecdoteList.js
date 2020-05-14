@@ -6,7 +6,12 @@ import { voteAnecdote } from '../reducers/anecdoteReducer'
 
 const AnecodeList = (props) => {
   const dispatch = useDispatch()
-  const anecdotes = useSelector(state => state.anecdotes)  
+  const anecdotes = useSelector(state => {
+    if ( state.filter === '' ) {
+      return state.anecdotes
+    }
+    return state.anecdotes.filter(anecdote => anecdote.content.toLowerCase().includes(state.filter))
+  })
   
   const vote = ( id, content ) => {
     console.log('vote', id)
