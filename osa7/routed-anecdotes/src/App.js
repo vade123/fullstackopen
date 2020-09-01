@@ -1,4 +1,4 @@
-import { Link, Route, Switch, useRouteMatch } from 'react-router-dom'
+import { Link, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom'
 import React, { useState } from 'react'
 
 const Menu = () => {
@@ -51,6 +51,7 @@ const About = () => (
     <p>Software engineering is full of excellent anecdotes, at this app you can find the best and add more.</p>
   </div>
 )
+const Notification = ({ notification }) => <div>{notification}</div>
 
 const Footer = () => (
   <div>
@@ -64,6 +65,7 @@ const CreateNew = (props) => {
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
+  const history = useHistory()
 
 
   const handleSubmit = (e) => {
@@ -74,6 +76,7 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
+    history.push('/')
   }
 
   return (
@@ -122,6 +125,8 @@ const App = () => {
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0)
     setAnecdotes(anecdotes.concat(anecdote))
+    setNotification(`a new anecdote ${anecdote.content} created!`)
+    setTimeout(() => setNotification(''), 10000)
   }
 
   const anecdoteById = (id) =>
@@ -147,6 +152,7 @@ const App = () => {
     <div>
       <h1>Software anecdotes</h1>
       <Menu />
+      <Notification notification={notification} />
       <Switch>
         <Route path='/anecdotes/:id'>
           <Anecdote anecdote={anecdote} />
