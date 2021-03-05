@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { createBlog, initializeBlogs } from './reducers/blogReducer';
+import { createBlog, delBlog, initializeBlogs, updateBlog } from './reducers/blogReducer';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Blog from './components/Blog';
@@ -12,8 +12,7 @@ import { setNotification } from './reducers/notificationReducer';
 
 const App = () => {
   const dispatch = useDispatch();
-  const blogs = useSelector(state => state.blogs);
-  //const [blogs, setBlogs] = useState([]);
+  const blogs = useSelector(state => state.blogs.sort((a, b) => b.likes - a.likes));
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -36,11 +35,7 @@ const App = () => {
   }, []);
 
   const blogFormRef = React.createRef();
-  /*
-  const setBlogsSorted = (array) => {
-    setBlogs(array.sort((a, b) => b.likes - a.likes));
-  };
-  */
+
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
@@ -102,14 +97,14 @@ const App = () => {
   const addLike = async (blog) => {
     const updated = await blogService.update(blog);
     const updated2 = { ...updated, user: blog.user };
-    //setBlogsSorted(blogs.map(b => b.id !== updated.id ? b : updated2));
+    dispatch(updateBlog(updated2));
   };
 
   const deleteBlog = async (blog) => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
       const res = await blogService.deleteBlog(blog);
       if (res === 204) {
-        //setBlogsSorted(blogs.filter(b => b.id !== blog.id));
+        dispatch(delBlog(blog.id));
       }
     }
   };
