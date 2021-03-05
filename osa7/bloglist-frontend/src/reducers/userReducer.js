@@ -13,4 +13,5 @@ export const setUser = (data) => {
     data
   };
 };
+
 export default userReducer;
