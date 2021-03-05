@@ -37,8 +37,8 @@ const update = async (oldBlog) => {
 };
 
 const deleteBlog = async (blog) => {
-  const config = { 
-    headers: { Authorization: token } 
+  const config = {
+    headers: { Authorization: token }
   };
   const res = await axios.delete(`${baseUrl}/${blog.id}`, config);
   return res.status;

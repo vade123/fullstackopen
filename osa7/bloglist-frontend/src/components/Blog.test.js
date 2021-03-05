@@ -76,17 +76,16 @@ test('blog form', () => {
   const url = component.container.querySelector('#url');
   const form = component.container.querySelector('form');
 
-  fireEvent.change(title, { 
+  fireEvent.change(title, {
     target: { value: 'testipenan ploki' }
   });
-  fireEvent.change(author, { 
+  fireEvent.change(author, {
     target: { value: 'testipena' }
   });
-  fireEvent.change(url, { 
+  fireEvent.change(url, {
     target: { value: 'testipena.com/ploki' }
   });
   fireEvent.submit(form);
-  
 
   const testBlog = {
     title: 'testipenan ploki',

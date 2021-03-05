@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { createBlog, initializeBlogs } from './reducers/blogReducer';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Blog from './components/Blog';
 import BlogForm from './components/BlogForm';
@@ -7,23 +9,22 @@ import Toggable from './components/Toggable';
 import blogService from './services/blogs';
 import loginService from './services/login';
 import { setNotification } from './reducers/notificationReducer';
-import { useDispatch } from 'react-redux';
 
 const App = () => {
   const dispatch = useDispatch();
-  const [blogs, setBlogs] = useState([]);
+  const blogs = useSelector(state => state.blogs);
+  //const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  //const [notification, setNotification] = useState([null, '']);
 
   useEffect(() => {
     const fetchAll = async () => {
       const result = await blogService.getAll();
-      setBlogsSorted(result);
+      dispatch(initializeBlogs(result));
     };
     fetchAll();
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const loggedUser = window.localStorage.getItem('loggedBloglistUser');
@@ -35,11 +36,11 @@ const App = () => {
   }, []);
 
   const blogFormRef = React.createRef();
-
+  /*
   const setBlogsSorted = (array) => {
     setBlogs(array.sort((a, b) => b.likes - a.likes));
   };
-
+  */
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
@@ -94,21 +95,21 @@ const App = () => {
   const postBlog = async (newBlog) => {
     blogFormRef.current.toggleVisibility();
     const blog = await blogService.create(newBlog);
-    setBlogsSorted(blogs.concat(blog));
+    dispatch(createBlog(blog));
     dispatch(setNotification(`a new blog ${blog.title} by ${blog.author} added`, 'green', 3));
   };
 
   const addLike = async (blog) => {
     const updated = await blogService.update(blog);
     const updated2 = { ...updated, user: blog.user };
-    setBlogsSorted(blogs.map(b => b.id !== updated.id ? b : updated2));
+    //setBlogsSorted(blogs.map(b => b.id !== updated.id ? b : updated2));
   };
 
   const deleteBlog = async (blog) => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
       const res = await blogService.deleteBlog(blog);
       if (res === 204) {
-        setBlogsSorted(blogs.filter(b => b.id !== blog.id));
+        //setBlogsSorted(blogs.filter(b => b.id !== blog.id));
       }
     }
   };
