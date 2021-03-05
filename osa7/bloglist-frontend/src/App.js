@@ -9,11 +9,12 @@ import Toggable from './components/Toggable';
 import blogService from './services/blogs';
 import loginService from './services/login';
 import { setNotification } from './reducers/notificationReducer';
+import { setUser } from './reducers/userReducer';
 
 const App = () => {
   const dispatch = useDispatch();
   const blogs = useSelector(state => state.blogs.sort((a, b) => b.likes - a.likes));
-  const [user, setUser] = useState(null);
+  const user = useSelector(state => state.user);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -29,10 +30,10 @@ const App = () => {
     const loggedUser = window.localStorage.getItem('loggedBloglistUser');
     if (loggedUser) {
       const user = JSON.parse(loggedUser);
-      setUser(user);
+      dispatch(setUser(user));
       blogService.setToken(user.token);
     }
-  }, []);
+  }, [dispatch]);
 
   const blogFormRef = React.createRef();
 
@@ -44,7 +45,7 @@ const App = () => {
         'loggedBloglistUser', JSON.stringify(user)
       );
       blogService.setToken(user.token);
-      setUser(user);
+      dispatch(setUser(user));
       setUsername('');
       setPassword('');
     } catch(err) {
@@ -54,7 +55,7 @@ const App = () => {
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBloglistUser');
-    setUser(null);
+    dispatch(setUser(null));
   };
 
   const loginForm = () => (
