@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
+import Blog from './components/Blog';
 import Blogs from './components/Blogs';
 import Notification from './components/Notification';
 import User from './components/User';
 import Users from './components/Users';
 import blogService from './services/blogs';
+import { initializeBlogs } from './reducers/blogReducer';
 import loginService from './services/login';
 import { setLoggedUser } from './reducers/loggedUserReducer';
 import { setNotification } from './reducers/notificationReducer';
@@ -34,6 +36,14 @@ const App = () => {
       dispatch(setUsers(result));
     };
     fetchUsers();
+  }, [dispatch]);
+
+  useEffect(() => {
+    const fetchAll = async () => {
+      const result = await blogService.getAll();
+      dispatch(initializeBlogs(result));
+    };
+    fetchAll();
   }, [dispatch]);
 
   const handleLogin = async (event) => {
@@ -100,6 +110,7 @@ const App = () => {
           <Route exact path='/users' render={() => <Users />} />
           <Route exact path='/' render={() => <Blogs />} />
           <Route exact path='/users/:id' render={({ match }) => <User id={match.params.id}/>} />
+          <Route exact path='/blogs/:id' render={({ match }) => <Blog id={match.params.id}/>} />
         </Switch>
       </Router>
     </div>

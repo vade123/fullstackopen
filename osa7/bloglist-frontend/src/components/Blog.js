@@ -1,42 +1,46 @@
 import React, { useState } from 'react';
+import { delBlog, updateBlog } from '../reducers/blogReducer';
+import { useDispatch, useSelector } from 'react-redux';
 
-const Blog = ({ blog, addLike, deleteBlog, currentUser }) => {
-  const [ toggle, setToggle ] = useState(false);
+import { Redirect } from 'react-router-dom';
+import blogService from '../services/blogs';
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5,
+const Blog = ({ id }) => {
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.loggedUser);
+  const blog = useSelector(state => state.blogs.find(blog => blog.id === id));
+  const [deleted, setDeleted] = useState(false);
+
+  if (!blog) {
+    return deleted ? <Redirect to='/' /> : null;
+  }
+
+  const deleteButton = () => (
+    <button onClick={deleteBlog}>delete blog</button>
+  );
+
+  const addLike = async () => {
+    const updated = await blogService.update(blog);
+    const updated2 = { ...updated, user: blog.user };
+    dispatch(updateBlog(updated2));
   };
 
-  const showLess = () => (
-    <div>
-      {blog.title} {blog.author} <button onClick={() => setToggle(!toggle)}>view</button>
-    </div>
-  );
-  const deleteButton = () => (
-    <div>
-      <button onClick={deleteBlog}>delete blog</button>
-    </div>
-  );
-  const showMore = () => (
-    <div>
-      <div id='show-more'>
-        {blog.title} <button onClick={() => setToggle(!toggle)}>hide</button> <br />
-      </div>
-      {blog.url} <br />
-      likes:{blog.likes} <button id='like-button' onClick={addLike}>like</button><br />
-      {blog.author}
-      {currentUser.username === blog.user.username && deleteButton()}
-    </div>
-  );
+  const deleteBlog = async () => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      const res = await blogService.deleteBlog(blog);
+      if (res === 204) {
+        dispatch(delBlog(blog.id));
+        setDeleted(true);
+      }
+    }
+  };
 
   return (
-    <div className="blog" style={blogStyle}>
-      {toggle === false && showLess()}
-      {toggle === true && showMore()}
+    <div>
+      <h2>{blog.title} {blog.author}</h2><br />
+      {blog.url} <br />
+      likes:{blog.likes} <button id='like-button' onClick={addLike}>like</button><br />
+      added by {blog.user.name} {user.username === blog.user.username && deleteButton()}
     </div>
   );
 };
