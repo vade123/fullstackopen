@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import Blog from './components/Blog';
 import Blogs from './components/Blogs';
+import Menu from './components/Menu';
 import Notification from './components/Notification';
 import User from './components/User';
 import Users from './components/Users';
@@ -62,11 +63,6 @@ const App = () => {
     }
   };
 
-  const handleLogout = () => {
-    window.localStorage.removeItem('loggedBloglistUser');
-    dispatch(setLoggedUser(null));
-  };
-
   const loginForm = () => (
     <div>
       <h2>log in to application</h2>
@@ -99,13 +95,10 @@ const App = () => {
 
   const showContent = () => (
     <div>
-      <h2>blogs</h2>
-      <Notification />
-      <div>
-        {user.name} logged in
-        <button onClick={handleLogout}>logout</button>
-      </div>
       <Router>
+        <Menu />
+        <h2>blogs</h2>
+        <Notification />
         <Switch>
           <Route exact path='/users' render={() => <Users />} />
           <Route exact path='/' render={() => <Blogs />} />
