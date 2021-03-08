@@ -4,15 +4,18 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import Blogs from './components/Blogs';
 import Notification from './components/Notification';
+import User from './components/User';
 import Users from './components/Users';
 import blogService from './services/blogs';
 import loginService from './services/login';
+import { setLoggedUser } from './reducers/loggedUserReducer';
 import { setNotification } from './reducers/notificationReducer';
-import { setUser } from './reducers/userReducer';
+import { setUsers } from './reducers/usersReducer';
+import userService from './services/users';
 
 const App = () => {
   const dispatch = useDispatch();
-  const user = useSelector(state => state.user);
+  const user = useSelector(state => state.loggedUser);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -20,9 +23,17 @@ const App = () => {
     const loggedUser = window.localStorage.getItem('loggedBloglistUser');
     if (loggedUser) {
       const user = JSON.parse(loggedUser);
-      dispatch(setUser(user));
+      dispatch(setLoggedUser(user));
       blogService.setToken(user.token);
     }
+  }, [dispatch]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const result = await userService.getUsers();
+      dispatch(setUsers(result));
+    };
+    fetchUsers();
   }, [dispatch]);
 
   const handleLogin = async (event) => {
@@ -33,7 +44,7 @@ const App = () => {
         'loggedBloglistUser', JSON.stringify(user)
       );
       blogService.setToken(user.token);
-      dispatch(setUser(user));
+      dispatch(setLoggedUser(user));
       setUsername('');
       setPassword('');
     } catch(err) {
@@ -43,7 +54,7 @@ const App = () => {
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBloglistUser');
-    dispatch(setUser(null));
+    dispatch(setLoggedUser(null));
   };
 
   const loginForm = () => (
@@ -88,6 +99,7 @@ const App = () => {
         <Switch>
           <Route exact path='/users' render={() => <Users />} />
           <Route exact path='/' render={() => <Blogs />} />
+          <Route exact path='/users/:id' render={({ match }) => <User id={match.params.id}/>} />
         </Switch>
       </Router>
     </div>
