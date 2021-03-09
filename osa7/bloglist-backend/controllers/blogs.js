@@ -78,7 +78,7 @@ blogsRouter.put('/:id', async (req, res, next) => {
       url: req.body.url,
       likes: req.body.likes,
       user: decodedToken.id,
-      comments: req.body.comments
+      comments: blog.comments
     });
     const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, newBlog, { new: true } );
     res.json(updatedBlog.toJSON());
