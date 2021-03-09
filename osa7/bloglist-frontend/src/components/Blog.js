@@ -41,6 +41,10 @@ const Blog = ({ id }) => {
       {blog.url} <br />
       likes:{blog.likes} <button id='like-button' onClick={addLike}>like</button><br />
       added by {blog.user.name} {user.username === blog.user.username && deleteButton()}
+      <h3>comments</h3>
+      <ul>
+        {blog.comments.map(comment => <li key={comment + Math.random() }>{comment}</li>)}
+      </ul>
     </div>
   );
 };

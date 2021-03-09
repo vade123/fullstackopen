@@ -23,7 +23,8 @@ blogsRouter.post('/', async (req, res, next) => {
       author: body.author,
       url: body.url,
       likes: body.likes,
-      user: user.id
+      user: user.id,
+      comments: []
     });
 
     const savedBlog = await blog.save();
@@ -77,11 +78,40 @@ blogsRouter.put('/:id', async (req, res, next) => {
       url: req.body.url,
       likes: req.body.likes,
       user: decodedToken.id,
+      comments: req.body.comments
     });
     const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, newBlog, { new: true } );
     res.json(updatedBlog.toJSON());
   } catch(error) {
     next(error);
+  }
+});
+
+blogsRouter.post('/:id/comments', async (req, res, next) => {
+  const token = req.token;
+
+  try {
+    const blog = await Blog.findById(req.params.id);
+    if (!blog) {
+      return res.status(404).json({ error: 'not found' });
+    }
+    const decodedToken = jwt.verify(token, process.env.SECRET);
+    if (!token || !decodedToken.id) {
+      return res.status(401).json({ error: 'token missing or invalid ' });
+    }
+    const newBlog = new Blog({
+      _id: blog.id,
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+      likes: blog.likes,
+      user: blog.user,
+      comments: blog.comments.concat(req.body.newcomment)
+    });
+    const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, newBlog, { new: true } );
+    res.json(updatedBlog.toJSON());
+  } catch(err) {
+    next(err);
   }
 });
 
