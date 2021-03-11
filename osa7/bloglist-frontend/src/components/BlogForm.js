@@ -1,5 +1,7 @@
+import { Button, TextField, Typography } from '@material-ui/core';
 import React, { useState } from 'react';
 
+import { makeStyles } from '@material-ui/core/styles';
 import propTypes from 'prop-types';
 
 const BlogForm = ({ postBlog }) => {
@@ -20,41 +22,48 @@ const BlogForm = ({ postBlog }) => {
     setUrl('');
   };
 
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      '& .MuiTextField-root': {
+        margin: theme.spacing(1, 0),
+        width: '25ch',
+      },
+    },
+  }));
+  const classes = useStyles();
+
   return (
     <div>
-      <h2>create new</h2>
-      <form onSubmit={handleCreate}>
+      <Typography variant='h5'>create new</Typography>
+      <form className={classes.root} onSubmit={handleCreate}>
         <div>
-          title:
-          <input
-            id='title'
+          <TextField
             type='text'
             value={title}
-            name='Title'
+            label="Title"
+            variant="outlined"
             onChange={({ target }) => setTitle(target.value)}
           />
         </div>
         <div>
-          author:
-          <input
-            id='author'
+          <TextField
             type='text'
             value={author}
-            name='Author'
+            label="Author"
+            variant="outlined"
             onChange={({ target }) => setAuthor(target.value)}
           />
         </div>
         <div>
-          url:
-          <input
-            id='url'
+          <TextField
             type='text'
             value={url}
-            name='Url'
+            label="Url"
+            variant="outlined"
             onChange={({ target }) => setUrl(target.value)}
           />
         </div>
-        <button id='submit-button' type='submit'>create</button>
+        <Button id='submit-button' type='submit'>create</Button>
       </form>
     </div>
   );

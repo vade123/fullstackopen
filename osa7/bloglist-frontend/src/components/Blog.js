@@ -1,7 +1,10 @@
+import { Button, IconButton, List, ListItem, ListItemIcon, ListItemText, TextField, Typography } from '@material-ui/core';
+import { Delete, ThumbUp } from '@material-ui/icons';
 import React, { useState } from 'react';
 import { delBlog, updateBlog } from '../reducers/blogReducer';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { Comment } from '@material-ui/icons';
 import { Redirect } from 'react-router-dom';
 import blogService from '../services/blogs';
 
@@ -17,7 +20,7 @@ const Blog = ({ id }) => {
   }
 
   const deleteButton = () => (
-    <button onClick={deleteBlog}>delete blog</button>
+    <IconButton onClick={deleteBlog}><Delete /></IconButton>
   );
 
   const addLike = async () => {
@@ -37,28 +40,41 @@ const Blog = ({ id }) => {
   };
 
   const handleAddComment = async () => {
-    const updated = await blogService.addComment(blog.id, comment);
-    dispatch(updateBlog(updated));
+    if (comment !== '') {
+      const updated = await blogService.addComment(blog.id, comment);
+      dispatch(updateBlog(updated));
+    }
   };
+
 
   return (
     <div>
-      <h2>{blog.title} {blog.author}</h2><br />
-      {blog.url} <br />
-      likes:{blog.likes} <button id='like-button' onClick={addLike}>like</button><br />
-      added by {blog.user.name} {user.username === blog.user.username && deleteButton()}
-      <h3>comments</h3>
-      <input
+      <Typography variant='h4'>{blog.title} {blog.author}</Typography>
+      <Typography>{blog.url}</Typography>
+      <Typography>likes:{blog.likes}<IconButton id='like-button' onClick={addLike}><ThumbUp /></IconButton></Typography>
+      <Typography>added by {blog.user.name} {user.username === blog.user.username && deleteButton()}</Typography>
+      <Typography variant='h5'>comments</Typography>
+      <List>
+        {blog.comments.map(comment =>
+          <ListItem key={comment+Math.random()}>
+            <ListItemIcon>
+              <Comment />
+            </ListItemIcon>
+            <ListItemText>
+              {comment}
+            </ListItemText>
+          </ListItem>)}
+      </List>
+      <TextField
         id='comment'
         type='text'
         value={comment}
-        name='Comment'
+        label='Comment'
+        fullWidth
+        variant="outlined"
         onChange={({ target }) => setComment(target.value)}
       />
-      <button onClick={handleAddComment}>add comment</button>
-      <ul>
-        {blog.comments.map(comment => <li key={comment + Math.random() }>{comment}</li>)}
-      </ul>
+      <Button onClick={handleAddComment}>add comment</Button>
     </div>
   );
 };

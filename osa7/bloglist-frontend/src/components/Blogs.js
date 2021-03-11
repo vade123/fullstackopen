@@ -1,3 +1,4 @@
+import { Card, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 
 import BlogForm from './BlogForm';
@@ -7,6 +8,7 @@ import Toggable from './Toggable';
 import blogService from '../services/blogs';
 import { createBlog } from '../reducers/blogReducer';
 import { setNotification } from '../reducers/notificationReducer';
+import { withStyles } from '@material-ui/core/styles';
 
 const Blogs = () => {
   const dispatch = useDispatch();
@@ -14,31 +16,48 @@ const Blogs = () => {
 
   const blogFormRef = React.createRef();
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5,
-  };
-
   const postBlog = async (newBlog) => {
     blogFormRef.current.toggleVisibility();
     const blog = await blogService.create(newBlog);
     dispatch(createBlog(blog));
-    dispatch(setNotification(`a new blog ${blog.title} by ${blog.author} added`, 'green', 3));
+    dispatch(setNotification(`a new blog ${blog.title} by ${blog.author} added`, 'success', 3));
   };
+
+  const StyledTableRow = withStyles((theme) => ({
+    root: {
+      '&:nth-of-type(odd)': {
+        backgroundColor: theme.palette.action.hover
+      },
+    },
+  }))(TableRow);
 
   return (
     <div>
       <Toggable buttonLabel="new blog" ref={blogFormRef}>
         <BlogForm postBlog={postBlog} />
       </Toggable>
-      {blogs.map(blog =>
-        <div key={blog.id} style={blogStyle}>
-          <Link to={`/blogs/${blog.id}`}>{blog.title} {blog.author}</Link>
-        </div>
-      )}
+      <TableContainer component={Card} variant="outlined">
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell><Typography>title</Typography></TableCell>
+              <TableCell><Typography>author</Typography></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {blogs.map(blog =>
+              <StyledTableRow key={blog.id}>
+                <TableCell>
+                  <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+                </TableCell>
+                <TableCell>
+                  {blog.author}
+                </TableCell>
+              </StyledTableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 };

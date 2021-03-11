@@ -1,4 +1,7 @@
+import { List, ListItem, ListItemIcon, ListItemText, ListSubheader, Typography } from '@material-ui/core';
+
 import React from 'react';
+import SubjectRoundedIcon from '@material-ui/icons/SubjectRounded';
 import { useSelector } from 'react-redux';
 
 const User = ({ id }) => {
@@ -9,9 +12,22 @@ const User = ({ id }) => {
   }
   return (
     <div>
-      <h2>{user.name}</h2>
-      <b>blogs added</b>
-      <ul>{user.blogs.map(blog => <li key={blog.id}>{blog.title}</li>)}</ul>
+      <Typography variant='h5'>{user.name}</Typography>
+      <List
+        subheader={
+          <ListSubheader component="div" id="nested-list-subheader">
+            blogs added
+          </ListSubheader>
+        }>
+        {user.blogs.map(blog =>
+          <ListItem key={blog.id}>
+            <ListItemIcon>
+              <SubjectRoundedIcon />
+            </ListItemIcon>
+            <ListItemText primary={blog.title} secondary={blog.author} />
+          </ListItem>
+        )}
+      </List>
     </div>
   );
 };
