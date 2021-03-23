@@ -7,6 +7,7 @@ const AUTHORS = gql`
       name
       born
       bookCount
+      id
     }
   }
 `
@@ -72,13 +73,9 @@ const Authors = (props) => {
       </table>
       <h2>set birthyear</h2>
       <form onSubmit={submit}>
-        <div>
-          name
-          <input
-            value={name}
-            onChange={({ target }) => setName(target.value)}
-          />
-        </div>
+        <select value={name} onChange={(event) => setName(event.target.value)}>
+          {authors.map(author => <option key={author.id} value={author.name}>{author.name}</option>)}
+        </select>
         <div>
           born
           <input
