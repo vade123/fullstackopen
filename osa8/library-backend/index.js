@@ -107,7 +107,7 @@ const resolvers = {
           invalidArgs: args,
         })
       }
-      return 
+      return author
     }
   }
 }
