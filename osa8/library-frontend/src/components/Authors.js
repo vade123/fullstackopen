@@ -23,7 +23,7 @@ const UPDATE_AUTHOR = gql`
   }
 `
 const Authors = (props) => {
-  const [name, setName] = useState('')
+  const [name, setName] = useState('Reijo Mäki')
   const [setBornTo, setBorn] = useState('')
   const result = useQuery(AUTHORS)
   const [ updateAuthor ] = useMutation(UPDATE_AUTHOR,{
@@ -47,6 +47,7 @@ const Authors = (props) => {
   } 
   
   const authors = result.data.allAuthors
+  
 
   return (
     <div>
