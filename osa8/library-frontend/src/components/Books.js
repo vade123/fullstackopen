@@ -1,10 +1,10 @@
-import { gql, useQuery } from "@apollo/client";
+import { gql, useQuery, useLazyQuery } from "@apollo/client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const BOOKS = gql`
-  query {
-    allBooks {
+  query($genre: String) {
+    allBooks(genre: $genre) {
       title
       published
       author {
@@ -20,25 +20,28 @@ const GENRES = gql`
   }
 `;
 const Books = (props) => {
-  const [filter, setFilter] = useState("");
-  const result = useQuery(BOOKS);
-  const result2 = useQuery(GENRES);
+  const [books, setBooks] = useState([]);
+  const [loadBooks, { loading, data }] = useLazyQuery(BOOKS);
+  const result = useQuery(GENRES);
+
+  useEffect(() => {
+    loadBooks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (data && data.allBooks) {
+      setBooks(data.allBooks);
+    }
+  }, [data]);
+
   if (!props.show) {
     return null;
   }
-  if (result.loading || result2.loading) {
+  if (result.loading || loading) {
     return <div>loading...</div>;
   }
-
-  const books = result.data.allBooks;
-  const genres = result2.data.genres;
-
-  let filteredBooks;
-  if (filter !== "") {
-    filteredBooks = books.filter((b) => b.genres.includes(filter));
-  } else {
-    filteredBooks = books;
-  }
+  const genres = result.data.genres;
 
   return (
     <div>
@@ -51,7 +54,7 @@ const Books = (props) => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {filteredBooks.map((a) => (
+          {books.map((a) => (
             <tr key={a.title}>
               <td>{a.title}</td>
               <td>{a.author.name}</td>
@@ -61,11 +64,11 @@ const Books = (props) => {
         </tbody>
       </table>
       {genres.map((g) => (
-        <button key={g} onClick={() => setFilter(g)}>
+        <button key={g} onClick={() => loadBooks({ variables: { genre: g } })}>
           {g}
         </button>
       ))}
-      <button onClick={() => setFilter("")}>all books</button>
+      <button onClick={() => loadBooks()}>all books</button>
     </div>
   );
 };
