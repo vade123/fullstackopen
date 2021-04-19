@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { gql, useMutation, useQuery } from '@apollo/client'
+import React, { useEffect, useState } from "react";
+import { gql, useMutation, useQuery } from "@apollo/client";
 
 const AUTHORS = gql`
   query {
@@ -10,44 +10,46 @@ const AUTHORS = gql`
       id
     }
   }
-`
+`;
 const UPDATE_AUTHOR = gql`
   mutation editAuthor($name: String!, $setBornTo: Int!) {
-    editAuthor(
-      name: $name,
-      setBornTo: $setBornTo
-    ) {
+    editAuthor(name: $name, setBornTo: $setBornTo) {
       name
       born
     }
   }
-`
+`;
 const Authors = (props) => {
-  const [name, setName] = useState('Reijo Mäki')
-  const [setBornTo, setBorn] = useState('')
-  const result = useQuery(AUTHORS)
-  const [ updateAuthor ] = useMutation(UPDATE_AUTHOR,{
-    refetchQueries: [ {query: AUTHORS } ]
-  })
+  const [name, setName] = useState("");
+  const [setBornTo, setBorn] = useState("");
+  const result = useQuery(AUTHORS);
+  const [updateAuthor] = useMutation(UPDATE_AUTHOR, {
+    refetchQueries: [{ query: AUTHORS }],
+  });
+
+  useEffect(() => {
+    if (result.data) {
+      setName(result.data.allAuthors[0].name);
+    }
+  }, [result.data]);
 
   if (!props.show) {
-    return null
+    return null;
   }
 
-  if (result.loading)  {
-    return <div>loading...</div>
+  if (result.loading) {
+    return <div>loading...</div>;
   }
 
   const submit = async (event) => {
-    event.preventDefault()
-    updateAuthor({ variables: { name, setBornTo } })
-    
-    setName('')
-    setBorn('')
-  } 
-  
-  const authors = result.data.allAuthors
-  
+    event.preventDefault();
+    updateAuthor({ variables: { name, setBornTo } });
+
+    setName("");
+    setBorn("");
+  };
+
+  const authors = result.data.allAuthors;
 
   return (
     <div>
@@ -56,39 +58,39 @@ const Authors = (props) => {
         <tbody>
           <tr>
             <th></th>
-            <th>
-              born
-            </th>
-            <th>
-              books
-            </th>
+            <th>born</th>
+            <th>books</th>
           </tr>
-          {authors.map(a =>
+          {authors.map((a) => (
             <tr key={a.name}>
               <td>{a.name}</td>
               <td>{a.born}</td>
               <td>{a.bookCount}</td>
             </tr>
-          )}
+          ))}
         </tbody>
       </table>
       <h2>set birthyear</h2>
       <form onSubmit={submit}>
         <select value={name} onChange={(event) => setName(event.target.value)}>
-          {authors.map(author => <option key={author.id} value={author.name}>{author.name}</option>)}
+          {authors.map((author) => (
+            <option key={author.id} value={author.name}>
+              {author.name}
+            </option>
+          ))}
         </select>
         <div>
           born
           <input
-            type='number'
+            type="number"
             value={setBornTo}
             onChange={({ target }) => setBorn(parseInt(target.value))}
           />
-          <button type='submit'>update author</button>
+          <button type="submit">update author</button>
         </div>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default Authors
+export default Authors;
