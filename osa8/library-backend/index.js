@@ -3,6 +3,7 @@ const {
   gql,
   UserInputError,
   AuthenticationError,
+  PubSub,
 } = require("apollo-server");
 const mongoose = require("mongoose");
 const Author = require("./models/author");
@@ -10,7 +11,6 @@ const Book = require("./models/book");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const User = require("./models/user");
-const book = require("./models/book");
 
 const MONGODB_URI = process.env.MONGODB_URI;
 const JWT_SECRET = "THIS_IS_VERY_SECRET_KEY_EBIN_XD";
@@ -28,7 +28,7 @@ mongoose
   .catch((error) => {
     console.log("error connection to MongoDB:", error.message);
   });
-
+const pubsub = new PubSub();
 const typeDefs = gql`
   type User {
     username: String!
@@ -77,6 +77,9 @@ const typeDefs = gql`
     createUser(username: String!, favoriteGenre: String!): User
 
     login(username: String!, password: String!): Token
+  }
+  type Subscription {
+    bookAdded: Book!
   }
 `;
 
@@ -145,6 +148,7 @@ const resolvers = {
           invalidArgs: args,
         });
       }
+      pubsub.publish("BOOK_ADDED", { bookAdded: book });
       return book;
     },
     editAuthor: async (_, args, context) => {
@@ -191,6 +195,11 @@ const resolvers = {
       return { value: jwt.sign(userForToken, JWT_SECRET) };
     },
   },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator(["BOOK_ADDED"]),
+    },
+  },
 };
 
 const server = new ApolloServer({
@@ -206,6 +215,7 @@ const server = new ApolloServer({
   },
 });
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionsUrl }) => {
   console.log(`Server ready at ${url}`);
+  console.log(`Subscriptions ready at ${subscriptionsUrl}`);
 });
