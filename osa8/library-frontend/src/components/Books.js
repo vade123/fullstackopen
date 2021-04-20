@@ -11,7 +11,7 @@ export const BOOK_DETAILS = gql`
     genres
   }
 `;
-const BOOKS = gql`
+export const BOOKS = gql`
   query($genre: String) {
     allBooks(genre: $genre) {
       title
