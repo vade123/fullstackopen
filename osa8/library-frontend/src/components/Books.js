@@ -1,7 +1,16 @@
 import { gql, useQuery, useLazyQuery } from "@apollo/client";
 
 import React, { useState, useEffect } from "react";
-
+export const BOOK_DETAILS = gql`
+  fragment BookDetails on Book {
+    title
+    published
+    author {
+      name
+    }
+    genres
+  }
+`;
 const BOOKS = gql`
   query($genre: String) {
     allBooks(genre: $genre) {

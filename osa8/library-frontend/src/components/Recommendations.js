@@ -25,7 +25,9 @@ const BOOKS = gql`
 const Recommendations = (props) => {
   const result = useQuery(USER, {
     onCompleted(data) {
-      loadBooks({ variables: { genre: data.me.favoriteGenre } });
+      if (data.me) {
+        loadBooks({ variables: { genre: data.me.favoriteGenre } });
+      }
     },
   });
   const [loadBooks, { loading, data }] = useLazyQuery(BOOKS);

@@ -1,12 +1,20 @@
 import React, { useState } from "react";
 
 import Authors from "./components/Authors";
-import Books from "./components/Books";
+import Books, { BOOK_DETAILS } from "./components/Books";
 import NewBook from "./components/NewBook";
 import Login from "./components/Login";
 import Recommendations from "./components/Recommendations";
-import { useApolloClient } from "@apollo/client";
+import { useSubscription, useApolloClient, gql } from "@apollo/client";
+const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      ...BookDetails
+    }
+  }
 
+  ${BOOK_DETAILS}
+`;
 const App = () => {
   const [token, setToken] = useState(null);
   const [page, setPage] = useState("authors");
@@ -21,7 +29,12 @@ const App = () => {
     client.resetStore();
     setPage("login");
   };
-
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      const book = subscriptionData.data.bookAdded;
+      window.alert(`${book.title} by ${book.author.name} added`);
+    },
+  });
   const conditionalButtons = () => {
     if (!token) {
       return <button onClick={() => setPage("login")}>login</button>;
