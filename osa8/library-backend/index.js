@@ -106,7 +106,9 @@ const resolvers = {
         return books.filter((b) => b.author._id !== author._id);
       }
     },
-    allAuthors: () => Author.find({}),
+    allAuthors: () => {
+      return Author.find({});
+    },
     genres: async () => {
       const books = await Book.find({});
       const genres = new Set();
@@ -115,11 +117,6 @@ const resolvers = {
     },
     me: (_, __, context) => {
       return context.currentUser;
-    },
-  },
-  Author: {
-    bookCount: async (root) => {
-      return Book.collection.countDocuments({ author: root._id.valueOf() });
     },
   },
   Mutation: {
@@ -131,15 +128,18 @@ const resolvers = {
 
       let author = await Author.findOne({ name: args.author });
       if (!author) {
-        author = new Author({ name: args.author });
-        try {
-          await author.save();
-        } catch (err) {
-          throw new UserInputError(err.message, {
-            invalidArgs: args,
-          });
-        }
+        author = new Author({ name: args.author, bookCount: 1 });
+      } else {
+        author.bookCount = author.bookCount + 1;
       }
+      try {
+        await author.save();
+      } catch (err) {
+        throw new UserInputError(err.message, {
+          invalidArgs: args,
+        });
+      }
+
       const book = new Book({ ...args, author: author });
       try {
         await book.save();
